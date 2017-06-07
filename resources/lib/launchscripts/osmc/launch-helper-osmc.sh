@@ -17,14 +17,18 @@ if [ ${PRE_SCRIPT} != "" ]; then
     ${PRE_SCRIPT} \"${HOST}\" \"${GAME}\"
 fi
 
-sudo su osmc -c "sh $HEARTBEAT_PATH ${POST_SCRIPT} &" &
+sudo $HEARTBEAT_PATH ${POST_SCRIPT} &
 
-sudo su osmc -c "nohup openvt -c 7 -s -f bash $LAUNCHER_PATH \"${HOST}\" \"${GAME}\" $CONF_PATH ${KEY_DIR} $DEBUG_ENABLED >/dev/null 2>&1 &" &
+sudo nohup openvt -c 7 -s -f bash $LAUNCHER_PATH \"${HOST}\" \"${GAME}\" $CONF_PATH ${KEY_DIR} $DEBUG_ENABLED >/dev/null 2>&1 &
 
 sudo openvt -c 7 -s -f clear
 
 sleep 2
 
-sudo su -c "systemctl stop mediacenter &" &
+if [ -f /lib/systemd/system/kodi.service ] || [ -f /etc/systemd/system/kodi.service ]; then
+	sudo systemctl stop kodi &
+else
+	sudo systemctl stop mediacenter &
+fi
 
 exit

@@ -11,7 +11,11 @@ while [ true ]; do
                 ${POST_SCRIPT}
             fi
 
-            sudo su -c "systemctl restart mediacenter &" &
+						if [ -f /lib/systemd/system/kodi.service ] || [ -f /etc/systemd/system/kodi.service ]; then
+							sudo systemctl restart kodi &
+						else
+							sudo systemctl restart mediacenter &
+						fi
             exit
         else
             sleep 2
